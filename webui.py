@@ -392,7 +392,7 @@ if __name__ == "__main__":
         logger.info("Enable DEBUG-LEVEL log")
         logging.basicConfig(level=logging.DEBUG)
     hps = utils.get_hparams_from_file(config.webui_config.config_path)
-    # 若config.json中未指定版本则默认为最新版本
+    # If version is not specified in config.json, use the latest version
     version = hps.version if hasattr(hps, "version") else latest_version
     net_g = get_net_g(
         model_path=config.webui_config.model, version=version, device=device, hps=hps
@@ -404,25 +404,25 @@ if __name__ == "__main__":
         with gr.Row():
             with gr.Column():
                 text = gr.TextArea(
-                    label="输入文本内容",
+                    label="Input text content",
                     placeholder="""
-                    如果你选择语言为\'mix\'，必须按照格式输入，否则报错:
-                        格式举例(zh是中文，jp是日语，不区分大小写；说话人举例:gongzi):
-                         [说话人1]<zh>你好，こんにちは！ <jp>こんにちは，世界。
-                         [说话人2]<zh>你好吗？<jp>元気ですか？
-                         [说话人3]<zh>谢谢。<jp>どういたしまして。
+                    If you choose 'mix' as the language, you must input according to the format, otherwise an error will occur:
+                        Format example (zh is Chinese, jp is Japanese, case-insensitive; speaker example: gongzi):
+                         [Speaker1]<zh>Hello, こんにちは！ <jp>こんにちは、世界。
+                         [Speaker2]<zh>How are you?<jp>元気ですか？
+                         [Speaker3]<zh>Thank you.<jp>どういたしまして。
                          ...
-                    另外，所有的语言选项都可以用'|'分割长段实现分句生成。
+                    Additionally, all language options can use '|' to split long paragraphs for sentence-by-sentence generation.
                     """,
                 )
-                trans = gr.Button("中翻日", variant="primary")
-                slicer = gr.Button("快速切分", variant="primary")
-                formatter = gr.Button("检测语言，并整理为 MIX 格式", variant="primary")
+                trans = gr.Button("Chinese to Japanese", variant="primary")
+                slicer = gr.Button("Quick Split", variant="primary")
+                formatter = gr.Button("Detect Language and Format as MIX", variant="primary")
                 speaker = gr.Dropdown(
                     choices=speakers, value=speakers[0], label="Speaker"
                 )
                 _ = gr.Markdown(
-                    value="提示模式（Prompt mode）：可选文字提示或音频提示，用于生成文字或音频指定风格的声音。\n",
+                    value="Prompt mode: Choose between text prompt or audio prompt to generate voice with specified style in text or audio.\n",
                     visible=False,
                 )
                 prompt_mode = gr.Radio(
@@ -433,7 +433,7 @@ if __name__ == "__main__":
                 )
                 text_prompt = gr.Textbox(
                     label="Text prompt",
-                    placeholder="用文字描述生成风格。如：Happy",
+                    placeholder="Describe the generation style in words. E.g.: Happy",
                     value="Happy",
                     visible=False,
                 )
@@ -455,22 +455,22 @@ if __name__ == "__main__":
                 language = gr.Dropdown(
                     choices=languages, value=languages[0], label="Language"
                 )
-                btn = gr.Button("生成音频！", variant="primary")
+                btn = gr.Button("Generate Audio!", variant="primary")
             with gr.Column():
-                with gr.Accordion("融合文本语义", open=False):
+                with gr.Accordion("Blend Text Semantics", open=False):
                     gr.Markdown(
-                        value="使用辅助文本的语意来辅助生成对话（语言保持与主文本相同）\n\n"
-                        "**注意**：不要使用**指令式文本**（如：开心），要使用**带有强烈情感的文本**（如：我好快乐！！！）\n\n"
-                        "效果较不明确，留空即为不使用该功能"
+                        value="Use auxiliary text semantics to assist in generating dialogue (language remains the same as the main text)\n\n"
+                        "**Note**: Do not use **instructional text** (e.g., happy), use **text with strong emotions** (e.g., I'm so happy!!!)\n\n"
+                        "The effect is not very clear, leave it blank to not use this feature"
                     )
-                    style_text = gr.Textbox(label="辅助文本")
+                    style_text = gr.Textbox(label="Auxiliary Text")
                     style_weight = gr.Slider(
                         minimum=0,
                         maximum=1,
                         value=0.7,
                         step=0.1,
                         label="Weight",
-                        info="主文本和辅助文本的bert混合比率，0表示仅主文本，1表示仅辅助文本",
+                        info="BERT mixing ratio of main text and auxiliary text, 0 means only main text, 1 means only auxiliary text",
                     )
                 with gr.Row():
                     with gr.Column():
@@ -479,27 +479,27 @@ if __name__ == "__main__":
                             maximum=5,
                             value=0.2,
                             step=0.1,
-                            label="句间停顿(秒)，勾选按句切分才生效",
+                            label="Pause between sentences (seconds), effective when 'Split by Sentence' is checked",
                         )
                         interval_between_para = gr.Slider(
                             minimum=0,
                             maximum=10,
                             value=1,
                             step=0.1,
-                            label="段间停顿(秒)，需要大于句间停顿才有效",
+                            label="Pause between paragraphs (seconds), effective when greater than sentence pause",
                         )
                         opt_cut_by_sent = gr.Checkbox(
-                            label="按句切分    在按段落切分的基础上再按句子切分文本"
+                            label="Split by Sentence    Split text by sentences based on paragraph splitting"
                         )
-                        slicer = gr.Button("切分生成", variant="primary")
-                text_output = gr.Textbox(label="状态信息")
-                audio_output = gr.Audio(label="输出音频")
+                        slicer = gr.Button("Split and Generate", variant="primary")
+                text_output = gr.Textbox(label="Status Information")
+                audio_output = gr.Audio(label="Output Audio")
                 # explain_image = gr.Image(
-                #     label="参数解释信息",
+                #     label="Parameter Explanation",
                 #     show_label=True,
                 #     show_share_button=False,
                 #     show_download_button=False,
-                #     value=os.path.abspath("./img/参数说明.png"),
+                #     value=os.path.abspath("./img/parameter_explanation.png"),
                 # )
         btn.click(
             tts_fn,
@@ -564,6 +564,6 @@ if __name__ == "__main__":
             outputs=[language, text],
         )
 
-    print("推理页面已开启!")
+    print("Inference page is now open!")
     webbrowser.open(f"http://127.0.0.1:{config.webui_config.port}")
     app.launch(share=config.webui_config.share, server_port=config.webui_config.port)
