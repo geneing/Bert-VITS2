@@ -26,14 +26,14 @@ from oldVersion.V210.models import SynthesizerTrn as V210SynthesizerTrn
 from oldVersion.V210.text import symbols as V210symbols
 from oldVersion.V200.models import SynthesizerTrn as V200SynthesizerTrn
 from oldVersion.V200.text import symbols as V200symbols
-from oldVersion.V111.models import SynthesizerTrn as V111SynthesizerTrn
-from oldVersion.V111.text import symbols as V111symbols
-from oldVersion.V110.models import SynthesizerTrn as V110SynthesizerTrn
-from oldVersion.V110.text import symbols as V110symbols
-from oldVersion.V101.models import SynthesizerTrn as V101SynthesizerTrn
-from oldVersion.V101.text import symbols as V101symbols
+# from oldVersion.V111.models import SynthesizerTrn as V111SynthesizerTrn
+# from oldVersion.V111.text import symbols as V111symbols
+# from oldVersion.V110.models import SynthesizerTrn as V110SynthesizerTrn
+# from oldVersion.V110.text import symbols as V110symbols
+# from oldVersion.V101.models import SynthesizerTrn as V101SynthesizerTrn
+# from oldVersion.V101.text import symbols as V101symbols
 
-from oldVersion import V111, V110, V101, V200, V210, V220
+# from oldVersion import V111, V110, V101, V200, V210, V220
 
 # 当前版本信息
 latest_version = "2.3"
@@ -45,13 +45,13 @@ SynthesizerTrnMap = {
     "2.0.2-fix": V200SynthesizerTrn,
     "2.0.1": V200SynthesizerTrn,
     "2.0": V200SynthesizerTrn,
-    "1.1.1-fix": V111SynthesizerTrn,
-    "1.1.1": V111SynthesizerTrn,
-    "1.1": V110SynthesizerTrn,
-    "1.1.0": V110SynthesizerTrn,
-    "1.0.1": V101SynthesizerTrn,
-    "1.0": V101SynthesizerTrn,
-    "1.0.0": V101SynthesizerTrn,
+    # "1.1.1-fix": V111SynthesizerTrn,
+    # "1.1.1": V111SynthesizerTrn,
+    # "1.1": V110SynthesizerTrn,
+    # "1.1.0": V110SynthesizerTrn,
+    # "1.0.1": V101SynthesizerTrn,
+    # "1.0": V101SynthesizerTrn,
+    # "1.0.0": V101SynthesizerTrn,
 }
 
 symbolsMap = {
@@ -60,13 +60,13 @@ symbolsMap = {
     "2.0.2-fix": V200symbols,
     "2.0.1": V200symbols,
     "2.0": V200symbols,
-    "1.1.1-fix": V111symbols,
-    "1.1.1": V111symbols,
-    "1.1": V110symbols,
-    "1.1.0": V110symbols,
-    "1.0.1": V101symbols,
-    "1.0": V101symbols,
-    "1.0.0": V101symbols,
+    # "1.1.1-fix": V111symbols,
+    # "1.1.1": V111symbols,
+    # "1.1": V110symbols,
+    # "1.1.0": V110symbols,
+    # "1.0.1": V101symbols,
+    # "1.0": V101symbols,
+    # "1.0.0": V101symbols,
 }
 
 

@@ -7,10 +7,14 @@ from text import check_bert_models, cleaned_text_to_sequence, get_bert
 import argparse
 import torch.multiprocessing as mp
 from config import config
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def process_line(x):
     line, add_blank = x
+    # logger.info(f"{line=}")
     device = config.bert_gen_config.device
     if config.bert_gen_config.use_multi_device:
         rank = mp.current_process()._identity
@@ -36,7 +40,7 @@ def process_line(x):
         word2ph[0] += 1
 
     bert_path = wav_path.replace(".WAV", ".wav").replace(".wav", ".bert.pt")
-
+    logger.info(f"{bert_path=}")
     try:
         bert = torch.load(bert_path)
         assert bert.shape[0] == 2048
@@ -44,11 +48,13 @@ def process_line(x):
         bert = get_bert(text, word2ph, language_str, device)
         assert bert.shape[-1] == len(phone)
         torch.save(bert, bert_path)
+        logger.info(f"Saved: {bert_path}")
 
 
 preprocess_text_config = config.preprocess_text_config
 
 if __name__ == "__main__":
+    logging.basicConfig(filename='bert_gen.log', level=logging.INFO)
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-c", "--config", type=str, default=config.bert_gen_config.config_path
@@ -68,14 +74,14 @@ if __name__ == "__main__":
         lines.extend(f.readlines())
     add_blank = [hps.data.add_blank] * len(lines)
 
-    if len(lines) != 0:
-        num_processes = args.num_processes
-        with Pool(processes=num_processes) as pool:
-            for _ in tqdm(
-                pool.imap_unordered(process_line, zip(lines, add_blank)),
-                total=len(lines),
-            ):
-                # 这里是缩进的代码块，表示循环体
-                pass  # 使用pass语句作为占位符
+if len(lines) != 0:
+    num_processes = args.num_processes
+    with Pool(processes=num_processes) as pool:
+        for _ in tqdm(
+            pool.imap_unordered(process_line, zip(lines, add_blank)),
+            total=len(lines),
+        ):
+            # This is an indented code block, indicating the loop body
+            pass  # Use the pass statement as a placeholder
 
-    print(f"bert生成完毕!, 共有{len(lines)}个bert.pt生成!")
+print(f"BERT generation complete! A total of {len(lines)} bert.pt files generated!")

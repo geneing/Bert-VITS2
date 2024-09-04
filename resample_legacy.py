@@ -10,11 +10,15 @@ from config import config
 
 
 def process(item):
-    wav_name, args = item
-    wav_path = os.path.join(args.in_dir, wav_name)
+    wav_path, out_path, args = item
+    
     if os.path.exists(wav_path) and wav_path.lower().endswith(".wav"):
         wav, sr = librosa.load(wav_path, sr=args.sr)
-        soundfile.write(os.path.join(args.out_dir, wav_name), wav, sr)
+        basedir = os.path.dirname(out_path)
+        if not os.path.exists(basedir):
+            os.makedirs(basedir, exist_ok=True)
+        print(f"{wav_path=} {out_path=}\n")
+        soundfile.write(out_path, wav, sr)
 
 
 if __name__ == "__main__":
@@ -41,10 +45,10 @@ if __name__ == "__main__":
         "--processes",
         type=int,
         default=0,
-        help="cpu_processes",
+        help="cpu processes",
     )
     args, _ = parser.parse_known_args()
-    # autodl 无卡模式会识别出46个cpu
+    # autodl no-card mode will recognize 46 CPUs
     if args.processes == 0:
         processes = cpu_count() - 2 if cpu_count() > 4 else 1
     else:
@@ -58,8 +62,10 @@ if __name__ == "__main__":
             os.makedirs(args.out_dir, exist_ok=True)
         for filename in filenames:
             if filename.lower().endswith(".wav"):
-                tasks.append((filename, args))
-
+                inpath = os.path.join(dirpath, filename)
+                outpath = inpath.replace(args.in_dir, args.out_dir)
+                tasks.append((inpath, outpath, args))
+    
     for _ in tqdm(
         pool.imap_unordered(process, tasks),
     ):
@@ -68,4 +74,4 @@ if __name__ == "__main__":
     pool.close()
     pool.join()
 
-    print("音频重采样完毕!")
+    print("Audio resampling complete!")

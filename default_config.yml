@@ -1,75 +1,73 @@
-# 全局配置
-# 对于希望在同一时间使用多个配置文件的情况，例如两个GPU同时跑两个训练集：通过环境变量指定配置文件，不指定则默认为./config.yml
+# Global Configuration
+# For situations where multiple configuration files are needed at the same time, such as running two training sets on two GPUs simultaneously: specify the configuration file through environment variables, default is ./config.yml if not specified
 
-# 拟提供通用路径配置，统一存放数据，避免数据放得很乱
-# 每个数据集与其对应的模型存放至统一路径下，后续所有的路径配置均为相对于datasetPath的路径
-# 不填或者填空则路径为相对于项目根目录的路径
+# Provide a common path configuration to store data uniformly, avoiding messy data storage
+# Each dataset and its corresponding model are stored under a unified path, and all subsequent path configurations are relative to datasetPath
+# If not filled or left blank, the path is relative to the project root directory
 dataset_path: "Data/"
 
-# 模型镜像源，默认huggingface，使用openi镜像源需指定openi_token
+# Model mirror source, default is huggingface, specify openi_token to use openi mirror source
 mirror: ""
 openi_token: ""  # openi token
 
-# resample 音频重采样配置
-# 注意， “:” 后需要加空格
+# resample audio resampling configuration
+# Note, a space is needed after ":"
 resample:
-  # 目标重采样率
+  # Target resampling rate
   sampling_rate: 44100
-  # 音频文件输入路径，重采样会将该路径下所有.wav音频文件重采样
-  # 请填入相对于datasetPath的相对路径
-  in_dir: "audios/raw" # 相对于根目录的路径为 /datasetPath/in_dir
-  # 音频文件重采样后输出路径
+  # Input path for audio files, resampling will be applied to all .wav audio files under this path
+  # Please fill in the relative path to datasetPath
+  in_dir: "audios/raw" # Relative path to the root directory is /datasetPath/in_dir
+  # Output path for resampled audio files
   out_dir: "audios/wavs"
 
-
-# preprocess_text 数据集预处理相关配置
-# 注意， “:” 后需要加空格
+# preprocess_text dataset preprocessing related configuration
+# Note, a space is needed after ":"
 preprocess_text:
-  # 原始文本文件路径，文本格式应为{wav_path}|{speaker_name}|{language}|{text}。
-  transcription_path: "filelists/你的数据集文本.list"
-  # 数据清洗后文本路径，可以不填。不填则将在原始文本目录生成
+  # Path to the original text file, the text format should be {wav_path}|{speaker_name}|{language}|{text}.
+  transcription_path: "filelists/your_dataset_text.list"
+  # Path to the cleaned text file, can be left blank. If left blank, it will be generated in the original text directory
   cleaned_path: ""
-  # 训练集路径
+  # Training set path
   train_path: "filelists/train.list"
-  # 验证集路径
+  # Validation set path
   val_path: "filelists/val.list"
-  # 配置文件路径
+  # Configuration file path
   config_path: "config.json"
-  # 每个语言的验证集条数
+  # Number of validation set entries per language
   val_per_lang: 4
-  # 验证集最大条数，多于的会被截断并放到训练集中
+  # Maximum number of validation set entries, excess entries will be truncated and placed in the training set
   max_val_total: 12
-  # 是否进行数据清洗
+  # Whether to perform data cleaning
   clean: true
 
-
-# bert_gen 相关配置
-# 注意， “:” 后需要加空格
+# bert_gen related configuration
+# Note, a space is needed after ":"
 bert_gen:
-  # 训练数据集配置文件路径
+  # Path to the training dataset configuration file
   config_path: "config.json"
-  # 并行数
+  # Number of parallel processes
   num_processes: 4
-  # 使用设备：可选项 "cuda" 显卡推理，"cpu" cpu推理
-  # 该选项同时决定了get_bert_feature的默认设备
+  # Device to use: options are "cuda" for GPU inference, "cpu" for CPU inference
+  # This option also determines the default device for get_bert_feature
   device: "cuda"
-  # 使用多卡推理
+  # Use multiple devices for inference
   use_multi_device: false
 
-# emo_gen 相关配置
-# 注意， “:” 后需要加空格
+# emo_gen related configuration
+# Note, a space is needed after ":"
 emo_gen:
-  # 训练数据集配置文件路径
+  # Path to the training dataset configuration file
   config_path: "config.json"
-  # 并行数
+  # Number of parallel processes
   num_processes: 4
-  # 使用设备：可选项 "cuda" 显卡推理，"cpu" cpu推理
+  # Device to use: options are "cuda" for GPU inference, "cpu" for CPU inference
   device: "cuda"
-  # 使用多卡推理
+  # Use multiple devices for inference
   use_multi_device: false
 
-# train 训练配置
-# 注意， “:” 后需要加空格
+# train training configuration
+# Note, a space is needed after ":"
 train_ms:
   env:
     MASTER_ADDR: "localhost"
@@ -77,101 +75,99 @@ train_ms:
     WORLD_SIZE: 1
     LOCAL_RANK: 0
     RANK: 0
-    # 可以填写任意名的环境变量
+    # You can fill in any environment variable name
     # THE_ENV_VAR_YOU_NEED_TO_USE: "1234567"
-  # 底模设置
+  # Base model settings
   base:
     use_base_model: false
     repo_id: "Stardust_minus/Bert-VITS2"
-    model_image: "Bert-VITS2_2.3底模" # openi网页的模型名
-  # 训练模型存储目录：与旧版本的区别，原先数据集是存放在logs/model_name下的，现在改为统一存放在Data/你的数据集/models下
+    model_image: "Bert-VITS2_2.3 base model" # Model name on the openi webpage
+  # Directory for storing training models: different from the old version, the dataset was previously stored under logs/model_name, now it is uniformly stored under Data/your_dataset/models
   model: "models"
-  # 配置文件路径
+  # Configuration file path
   config_path: "configs/config.json"
-  # 训练使用的worker，不建议超过CPU核心数
+  # Number of workers used for training, not recommended to exceed the number of CPU cores
   num_workers: 16
-  # 关闭此项可以节约接近70%的磁盘空间，但是可能导致实际训练速度变慢和更高的CPU使用率。
+  # Disabling this option can save nearly 70% of disk space, but may result in slower actual training speed and higher CPU usage.
   spec_cache: False
-  # 保存的检查点数量，多于此数目的权重会被删除来节省空间。
+  # Number of saved checkpoints, weights exceeding this number will be deleted to save space.
   keep_ckpts: 8
 
-
-# webui webui配置
-# 注意， “:” 后需要加空格
+# webui webui configuration
+# Note, a space is needed after ":"
 webui:
-  # 推理设备
+  # Inference device
   device: "cuda"
-  # 模型路径
+  # Model path
   model: "models/G_8000.pth"
-  # 配置文件路径
+  # Configuration file path
   config_path: "configs/config.json"
-  # 端口号
+  # Port number
   port: 7860
-  # 是否公开部署，对外网开放
+  # Whether to deploy publicly, open to the external network
   share: false
-  # 是否开启debug模式
+  # Whether to enable debug mode
   debug: false
-  # 语种识别库，可选langid, fastlid
+  # Language identification library, options are langid, fastlid
   language_identification_library: "langid"
 
-
-# server-fastapi配置
-# 注意， “:” 后需要加空格
-# 注意，本配置下的所有配置均为相对于根目录的路径
+# server-fastapi configuration
+# Note, a space is needed after ":"
+# Note, all configurations under this configuration are relative to the root directory
 server:
-  # 端口号
+  # Port number
   port: 5000
-  # 模型默认使用设备：但是当前并没有实现这个配置。
+  # Default device for models: this configuration is not currently implemented.
   device: "cuda"
-  # 需要加载的所有模型的配置，可以填多个模型，也可以不填模型，等网页成功后手动加载模型
-  # 不加载模型的配置格式：删除默认给的两个模型配置，给models赋值 [ ]，也就是空列表。参考模型2的speakers 即 models: [ ]
-  # 注意，所有模型都必须正确配置model与config的路径，空路径会导致加载错误。
-  # 也可以不填模型，等网页加载成功后手动填写models。
+  # Configuration for all models to be loaded, multiple models can be filled in, or no models can be filled in, and models can be manually loaded after the webpage is successfully loaded
+  # Configuration format for not loading models: delete the two default model configurations, assign an empty list to models, i.e., models: [ ]. Refer to the speakers of model 2, i.e., models: [ ]
+  # Note, all models must correctly configure the paths of model and config, empty paths will cause loading errors.
+  # Models can also be left blank, and models can be manually filled in after the webpage is successfully loaded.
   models:
-    - # 模型的路径
+    - # Path to the model
       model: ""
-      # 模型config.json的路径
+      # Path to the model's config.json
       config: ""
-      # 模型使用设备，若填写则会覆盖默认配置
+      # Device to use for the model, if filled in, it will override the default configuration
       device: "cuda"
-      # 模型默认使用的语言
+      # Default language for the model
       language: "ZH"
-      # 模型人物默认参数
-      # 不必填写所有人物，不填的使用默认值
-      # 暂时不用填写，当前尚未实现按人区分配置
+      # Default parameters for model characters
+      # Not all characters need to be filled in, defaults will be used for those not filled in
+      # Temporarily not required, currently not implemented to distinguish configuration by character
       speakers:
-        - speaker: "科比"
+        - speaker: "Kobe"
           sdp_ratio: 0.2
           noise_scale: 0.6
           noise_scale_w: 0.8
           length_scale: 1
-        - speaker: "五条悟"
+        - speaker: "Gojo Satoru"
           sdp_ratio: 0.3
           noise_scale: 0.7
           noise_scale_w: 0.8
           length_scale: 0.5
-        - speaker: "安倍晋三"
+        - speaker: "Shinzo Abe"
           sdp_ratio: 0.2
           noise_scale: 0.6
           noise_scale_w: 0.8
           length_scale: 1.2
-    - # 模型的路径
+    - # Path to the model
       model: ""
-      # 模型config.json的路径
+      # Path to the model's config.json
       config: ""
-      # 模型使用设备，若填写则会覆盖默认配置
+      # Device to use for the model, if filled in, it will override the default configuration
       device: "cpu"
-      # 模型默认使用的语言
+      # Default language for the model
       language: "JP"
-      # 模型人物默认参数
-      # 不必填写所有人物，不填的使用默认值
-      speakers: [ ] # 也可以不填
+      # Default parameters for model characters
+      # Not all characters need to be filled in, defaults will be used for those not filled in
+      speakers: [ ] # Can also be left blank
 
-# 百度翻译开放平台 api配置
-# api接入文档 https://api.fanyi.baidu.com/doc/21
-# 请不要在github等网站公开分享你的app id 与 key
+# Baidu Translate Open Platform API configuration
+# API access documentation https://api.fanyi.baidu.com/doc/21
+# Please do not publicly share your app id and key on websites like GitHub
 translate:
-  # 你的APPID
+  # Your APPID
   "app_key": ""
-  # 你的密钥
+  # Your secret key
   "secret_key": ""

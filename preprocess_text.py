@@ -40,7 +40,7 @@ def preprocess(
     val_per_lang: int,
     max_val_total: int,
     clean: bool,
-    yml_config: str,  # 这个不要删
+    yml_config: str,  # Do not delete this
 ):
     if cleaned_path == "" or cleaned_path is None:
         cleaned_path = transcription_path + ".cleaned"
@@ -70,7 +70,7 @@ def preprocess(
                             )
                         except Exception as e:
                             print(line)
-                            print(f"生成训练集和验证集时发生错误！, 详细信息:\n{e}")
+                            print(f"Error occurred while generating training and validation sets! Details:\n{e}")
 
     transcription_path = cleaned_path
     spk_utt_map = defaultdict(list)
@@ -84,13 +84,13 @@ def preprocess(
         for line in f.readlines():
             utt, spk, language, text, phones, tones, word2ph = line.strip().split("|")
             if utt in audioPaths:
-                # 过滤数据集错误：相同的音频匹配多个文本，导致后续bert出问题
-                print(f"重复音频文本：{line}")
+                # Filter dataset errors: same audio matching multiple texts, causing issues with subsequent BERT processing
+                print(f"Duplicate audio text: {line}")
                 countSame += 1
                 continue
             if not os.path.isfile(utt):
-                # 过滤数据集错误：不存在对应音频
-                print(f"没有找到对应的音频：{utt}")
+                # Filter dataset errors: corresponding audio not found
+                print(f"Corresponding audio not found: {utt}")
                 countNotFound += 1
                 continue
             audioPaths.add(utt)
@@ -98,7 +98,7 @@ def preprocess(
             if spk not in spk_id_map.keys():
                 spk_id_map[spk] = current_sid
                 current_sid += 1
-        print(f"总重复音频数：{countSame}，总未找到的音频数:{countNotFound}")
+        print(f"Total duplicate audios: {countSame}, total audios not found: {countNotFound}")
 
     train_list = []
     val_list = []
@@ -124,7 +124,7 @@ def preprocess(
     json_config = json.load(open(config_path, encoding="utf-8"))
     json_config["data"]["spk2id"] = spk_id_map
     json_config["data"]["n_speakers"] = len(spk_id_map)
-    # 新增写入：写入训练版本、数据集路径
+    # New addition: write training version, dataset path
     json_config["version"] = latest_version
     json_config["data"]["training_files"] = os.path.normpath(train_path).replace(
         "\\", "/"
@@ -134,7 +134,7 @@ def preprocess(
     )
     with open(config_path, "w", encoding="utf-8") as f:
         json.dump(json_config, f, indent=2, ensure_ascii=False)
-    print("训练集和验证集生成完成！")
+    print("Training and validation sets generated successfully!")
 
 
 if __name__ == "__main__":

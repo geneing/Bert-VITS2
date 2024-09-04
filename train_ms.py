@@ -52,14 +52,14 @@ global_step = 0
 
 
 def run():
-    # 环境变量解析
+    # Parse environment variables
     envs = config.train_ms_config.env
     for env_name, env_value in envs.items():
         if env_name not in os.environ.keys():
-            print("加载config中的配置{}".format(str(env_value)))
+            print("Load configuration from config{}".format(str(env_value)))
             os.environ[env_name] = str(env_value)
     print(
-        "加载环境变量 \nMASTER_ADDR: {},\nMASTER_PORT: {},\nWORLD_SIZE: {},\nRANK: {},\nLOCAL_RANK: {}".format(
+        "# Load environment variables \nMASTER_ADDR: {},\nMASTER_PORT: {},\nWORLD_SIZE: {},\nRANK: {},\nLOCAL_RANK: {}".format(
             os.environ["MASTER_ADDR"],
             os.environ["MASTER_PORT"],
             os.environ["WORLD_SIZE"],
@@ -79,11 +79,10 @@ def run():
     rank = dist.get_rank()
     local_rank = int(os.environ["LOCAL_RANK"])
     n_gpus = dist.get_world_size()
-
-    # 命令行/config.yml配置解析
+    # Command line / config.yml configuration parsing
     # hps = utils.get_hparams()
     parser = argparse.ArgumentParser()
-    # 非必要不建议使用命令行配置，请使用config.yml文件
+    # It is not recommended to use command line configuration unless necessary, please use the config.yml file instead
     parser.add_argument(
         "-c",
         "--config",
@@ -96,7 +95,7 @@ def run():
         "-m",
         "--model",
         type=str,
-        help="数据集文件夹路径，请注意，数据不再默认放在/logs文件夹下。如果需要用命令行配置，请声明相对于根目录的路径",
+        help="Path to the dataset folder. Please note that the data is no longer stored in the default /logs folder. If you need to configure it from the command line, specify the path relative to the root directory.",
         default=config.dataset_path,
     )
     args, _ = parser.parse_known_args()
@@ -105,7 +104,7 @@ def run():
         os.makedirs(model_dir, exist_ok=True)
     hps = utils.get_hparams_from_file(args.config)
     hps.model_dir = model_dir
-    # 比较路径是否相同
+    # Compare if paths are the same
     if os.path.realpath(args.config) != os.path.realpath(
         config.train_ms_config.config_path
     ):
@@ -257,7 +256,7 @@ def run():
             bucket_cap_mb=512,
         )
 
-    # 下载底模
+    # Download base model
     if config.train_ms_config.base["use_base_model"]:
         utils.download_checkpoint(
             hps.model_dir,
@@ -310,7 +309,7 @@ def run():
             utils.get_steps(utils.latest_checkpoint_path(hps.model_dir, "G_*.pth"))
         )
         print(
-            f"******************检测到模型存在，epoch为 {epoch_str}，gloabl step为 {global_step}*********************"
+            f"******************Detected existing model, epoch is {epoch_str}, global step is {global_step}*********************"
         )
     except Exception as e:
         print(e)
