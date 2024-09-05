@@ -6,26 +6,25 @@
 
 VITS2 Backbone with multilingual bert
 
-For quick guide, please refer to `webui_preprocess.py`.
+For a quick guide, please refer to `webui_preprocess.py`.
 
-简易教程请参见 `webui_preprocess.py`。
+For a simple tutorial, see `webui_preprocess.py`.
 
-## 【项目推介】
-# FishAudio下的全新自回归TTS [Fish-Speech](https://github.com/fishaudio/fish-speech)现已可用，效果为目前开源SOTA水准，且在持续维护，推荐使用该项目作为BV2/GSV的替代。本项目短期内不再进行维护。
+## 【Project Introduction】
+# The new autoregressive TTS under FishAudio, [Fish-Speech](https://github.com/fishaudio/fish-speech), is now available. It achieves the current open-source SOTA level and is continuously maintained. It is recommended to use this project as a replacement for BV2/GSV. This project will not be maintained in the short term.
 ## Demo Video: https://www.bilibili.com/video/BV18E421371Q
 ## Tech slides Video: https://www.bilibili.com/video/BV1zJ4m1K7cj
-## 请注意，本项目核心思路来源于[anyvoiceai/MassTTS](https://github.com/anyvoiceai/MassTTS) 一个非常好的tts项目
-## MassTTS的演示demo为[ai版峰哥锐评峰哥本人,并找回了在金三角失落的腰子](https://www.bilibili.com/video/BV1w24y1c7z9)
+## Please note, the core idea of this project comes from [anyvoiceai/MassTTS](https://github.com/anyvoiceai/MassTTS), a very good tts project
+## MassTTS's demo is [AI version of Feng Ge's sharp review of himself, and finding back his lost kidney in the Golden Triangle](https://www.bilibili.com/video/BV1w24y1c7z9)
 
-[//]: # (## 本项目与[PlayVoice/vits_chinese]&#40;https://github.com/PlayVoice/vits_chinese&#41; 没有任何关系)
+[//]: # (## This project has no relation to [PlayVoice/vits_chinese](https://github.com/PlayVoice/vits_chinese))
 
 [//]: # ()
-[//]: # (本仓库来源于之前朋友分享了ai峰哥的视频，本人被其中的效果惊艳，在自己尝试MassTTS以后发现fs在音质方面与vits有一定差距，并且training的pipeline比vits更复杂，因此按照其思路将bert)
+[//]: # (This repository originated from a friend sharing a video of AI Feng Ge, I was amazed by the effect, and after trying MassTTS, I found that fs has a certain gap in sound quality compared to vits, and the training pipeline is more complex than vits, therefore, following its idea, bert)
 
-## 成熟的旅行者/开拓者/舰长/博士/sensei/猎魔人/喵喵露/V应当参阅代码自己学习如何训练。
+## Experienced travelers/pioneers/captains/doctors/senseis/demon hunters/meow meows/V should refer to the code to learn how to train themselves.
 
-### 严禁将此项目用于一切违反《中华人民共和国宪法》，《中华人民共和国刑法》，《中华人民共和国治安管理处罚法》和《中华人民共和国民法典》之用途。
-### 严禁用于任何政治相关用途。
+### Strictly forbidden for any political related purposes.
 #### Video:https://www.bilibili.com/video/BV1hp4y1K78E
 #### Demo:https://www.bilibili.com/video/BV1TF411k78w
 #### QQ Group：815818430
@@ -38,9 +37,9 @@ For quick guide, please refer to `webui_preprocess.py`.
 + [emotional-vits](https://github.com/innnky/emotional-vits)
 + [fish-speech](https://github.com/fishaudio/fish-speech)
 + [Bert-VITS2-UI](https://github.com/jiangyuxiaoxiao/Bert-VITS2-UI)
-## 感谢所有贡献者作出的努力
+## Thanks to all contributors for their efforts
 <a href="https://github.com/fishaudio/Bert-VITS2/graphs/contributors" target="_blank">
   <img src="https://contrib.rocks/image?repo=fishaudio/Bert-VITS2"/>
 </a>
 
-[//]: # (# 本项目所有代码引用均已写明，bert部分代码思路来源于[AI峰哥]&#40;https://www.bilibili.com/video/BV1w24y1c7z9&#41;，与[vits_chinese]&#40;https://github.com/PlayVoice/vits_chinese&#41;无任何关系。欢迎各位查阅代码。同时，我们也对该开发者的[碰瓷，乃至开盒开发者的行为]&#40;https://www.bilibili.com/read/cv27101514/&#41;表示强烈谴责。)
+[//]: # (# All code references in this project are stated, the idea of the bert part comes from [AI Feng Ge](https://www.bilibili.com/video/BV1w24y1c7z9), and has no relation to [vits_chinese](https://github.com/PlayVoice/vits_chinese). Everyone is welcome to check the code. At the same time, we also strongly condemn the behavior of [clashing, even opening the box developers](https://www.bilibili.com/read/cv27101514/).)
