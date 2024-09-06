@@ -450,9 +450,13 @@ def train_and_evaluate(
         speakers = speakers.cuda(local_rank, non_blocking=True)
         tone = tone.cuda(local_rank, non_blocking=True)
         language = language.cuda(local_rank, non_blocking=True)
-        bert = bert.cuda(local_rank, non_blocking=True)
-        ja_bert = ja_bert.cuda(local_rank, non_blocking=True)
-        en_bert = en_bert.cuda(local_rank, non_blocking=True)
+
+        #smooth transition bert_scale from 0 to 1 between epoch = hps.train.warmup_epochs and epoch = hps.train.warmup_epochs + 4
+        bert_scale = max(0.0, min(1.0, (epoch - hps.train.warmup_epochs) / 4.0))
+
+        bert = (bert_scale*bert).cuda(local_rank, non_blocking=True)
+        ja_bert = (bert_scale*ja_bert).cuda(local_rank, non_blocking=True)
+        en_bert = (bert_scale*en_bert).cuda(local_rank, non_blocking=True)
 
         with autocast(enabled=hps.train.bf16_run, dtype=torch.bfloat16):
             (
@@ -692,7 +696,7 @@ def train_and_evaluate(
                 )
 
             if global_step % hps.train.eval_interval == 0:
-                evaluate(hps, net_g, eval_loader, writer_eval)
+                evaluate(hps, net_g, eval_loader, writer_eval, epoch)
                 utils.save_checkpoint(
                     net_g,
                     optim_g,
@@ -738,7 +742,7 @@ def train_and_evaluate(
         logger.info("====> Epoch: {}".format(epoch))
 
 
-def evaluate(hps, generator, eval_loader, writer_eval):
+def evaluate(hps, generator, eval_loader, writer_eval, epoch):
     generator.eval()
     image_dict = {}
     audio_dict = {}
@@ -762,9 +766,13 @@ def evaluate(hps, generator, eval_loader, writer_eval):
             spec, spec_lengths = spec.cuda(), spec_lengths.cuda()
             y, y_lengths = y.cuda(), y_lengths.cuda()
             speakers = speakers.cuda()
-            bert = bert.cuda()
-            ja_bert = ja_bert.cuda()
-            en_bert = en_bert.cuda()
+    
+            #smooth transition bert_scale from 0 to 1 between epoch = hps.train.warmup_epochs and epoch = hps.train.warmup_epochs + 4
+            bert_scale = max(0.0, min(1.0, (epoch - hps.train.warmup_epochs) / 4.0))
+
+            bert = (bert_scale*bert).cuda()
+            ja_bert = (bert_scale*ja_bert).cuda()
+            en_bert = (bert_scale*en_bert).cuda()
             tone = tone.cuda()
             language = language.cuda()
             for use_sdp in [True, False]:
